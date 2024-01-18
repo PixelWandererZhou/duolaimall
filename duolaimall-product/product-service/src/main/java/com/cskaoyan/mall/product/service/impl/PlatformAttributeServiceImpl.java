@@ -1,7 +1,9 @@
 package com.cskaoyan.mall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.cskaoyan.mall.product.converter.dto.PlatformAttributeInfoConverter;
+import com.cskaoyan.mall.product.converter.param.PlatformAttributeInfoParamConverter;
 import com.cskaoyan.mall.product.dto.PlatformAttributeInfoDTO;
 import com.cskaoyan.mall.product.dto.PlatformAttributeValueDTO;
 import com.cskaoyan.mall.product.mapper.PlatformAttrInfoMapper;
@@ -9,11 +11,15 @@ import com.cskaoyan.mall.product.mapper.PlatformAttrValueMapper;
 import com.cskaoyan.mall.product.model.PlatformAttributeInfo;
 import com.cskaoyan.mall.product.model.PlatformAttributeValue;
 import com.cskaoyan.mall.product.query.PlatformAttributeParam;
+import com.cskaoyan.mall.product.query.PlatformAttributeValueParam;
 import com.cskaoyan.mall.product.service.PlatformAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PlatformAttributeServiceImpl implements PlatformAttributeService {
@@ -23,6 +29,8 @@ public class PlatformAttributeServiceImpl implements PlatformAttributeService {
     PlatformAttrValueMapper platformAttrValueMapper;
     @Autowired
     PlatformAttributeInfoConverter platformAttributeInfoConverter;
+    @Autowired
+    PlatformAttributeInfoParamConverter platformAttributeInfoParamConverter;
 
     @Override
     public List<PlatformAttributeInfoDTO> getPlatformAttrInfoList(Long firstLevelCategoryId, Long secondLevelCategoryId, Long thirdLevelCategoryId) {
@@ -56,8 +64,32 @@ public class PlatformAttributeServiceImpl implements PlatformAttributeService {
     }
 
     @Override
+    @Transactional
     public void savePlatformAttrInfo(PlatformAttributeParam platformAttributeParam) {
+        UpdateWrapper<PlatformAttributeInfo> platformAttributeInfoUpdateWrapper = new UpdateWrapper<>();
+        platformAttributeInfoUpdateWrapper
+                .eq("category_id",platformAttributeParam.getCategoryId());
+        int i = platformAttrInfoMapper.update(platformAttributeInfoParamConverter.attributeInfoParam2Info(platformAttributeParam), platformAttributeInfoUpdateWrapper);
+        if(platformAttributeParam.getAttrValueList()!=null){
+            //delete all attrValueList
+            Map<String,Object> map = new HashMap<>();
+            map.put("attr_id",platformAttributeParam.getId());
+            platformAttrValueMapper.deleteByMap(map);
 
+            //insert new attrValueList
+            for (PlatformAttributeValueParam platformAttributeValueParam : platformAttributeParam.getAttrValueList()) {
+                PlatformAttributeValue platformAttributeValue = new PlatformAttributeValue();
+                platformAttributeValue.setAttrId(platformAttributeValueParam.getAttrId());
+                platformAttributeValue.setValueName(platformAttributeValueParam.getValueName());
+                platformAttrValueMapper.insert(platformAttributeValue);
+            }
+        }
+        else {
+            //delete all attrValueList
+            Map<String,Object> map = new HashMap<>();
+            map.put("attr_id",platformAttributeParam.getId());
+            platformAttrValueMapper.deleteByMap(map);
+        }
     }
 
     @Override
