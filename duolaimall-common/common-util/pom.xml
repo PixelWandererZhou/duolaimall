@@ -25,5 +25,15 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!--minio-->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.2.0</version>
+        </dependency>
+
     </dependencies>
+
+
+
 </project>
