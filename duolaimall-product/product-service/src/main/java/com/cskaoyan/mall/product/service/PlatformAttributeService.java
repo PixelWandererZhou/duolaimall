@@ -30,5 +30,4 @@ public interface PlatformAttributeService {
             获取平台属性值列表
      */
     List<PlatformAttributeValueDTO> getPlatformAttrInfo(Long attrId);
-
 }

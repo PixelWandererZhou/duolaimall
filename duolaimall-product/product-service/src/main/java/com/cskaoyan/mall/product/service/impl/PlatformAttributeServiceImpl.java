@@ -5,7 +5,9 @@ import com.cskaoyan.mall.product.converter.dto.PlatformAttributeInfoConverter;
 import com.cskaoyan.mall.product.dto.PlatformAttributeInfoDTO;
 import com.cskaoyan.mall.product.dto.PlatformAttributeValueDTO;
 import com.cskaoyan.mall.product.mapper.PlatformAttrInfoMapper;
+import com.cskaoyan.mall.product.mapper.PlatformAttrValueMapper;
 import com.cskaoyan.mall.product.model.PlatformAttributeInfo;
+import com.cskaoyan.mall.product.model.PlatformAttributeValue;
 import com.cskaoyan.mall.product.query.PlatformAttributeParam;
 import com.cskaoyan.mall.product.service.PlatformAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import java.util.List;
 public class PlatformAttributeServiceImpl implements PlatformAttributeService {
     @Autowired
     PlatformAttrInfoMapper platformAttrInfoMapper;
+    @Autowired
+    PlatformAttrValueMapper platformAttrValueMapper;
     @Autowired
     PlatformAttributeInfoConverter platformAttributeInfoConverter;
 
@@ -58,6 +62,9 @@ public class PlatformAttributeServiceImpl implements PlatformAttributeService {
 
     @Override
     public List<PlatformAttributeValueDTO> getPlatformAttrInfo(Long attrId) {
-        return null;
+        QueryWrapper<PlatformAttributeValue> platformAttributeValueQueryWrapper = new QueryWrapper<>();
+        platformAttributeValueQueryWrapper.eq("attr_id",attrId);
+        List<PlatformAttributeValue> platformAttributeValues = platformAttrValueMapper.selectList(platformAttributeValueQueryWrapper);
+        return platformAttributeInfoConverter.platformAttributeValuesPO2DTOs(platformAttributeValues);
     }
 }

@@ -1,10 +1,7 @@
 package com.cskaoyan.mall.product.controller;
 
 import com.cskaoyan.mall.common.result.Result;
-import com.cskaoyan.mall.product.dto.FirstLevelCategoryDTO;
-import com.cskaoyan.mall.product.dto.PlatformAttributeInfoDTO;
-import com.cskaoyan.mall.product.dto.SecondLevelCategoryDTO;
-import com.cskaoyan.mall.product.dto.ThirdLevelCategoryDTO;
+import com.cskaoyan.mall.product.dto.*;
 import com.cskaoyan.mall.product.service.CategoryService;
 import com.cskaoyan.mall.product.service.FileService;
 import com.cskaoyan.mall.product.service.PlatformAttributeService;
@@ -44,6 +41,12 @@ public class AdminProductController {
     public Result<List<PlatformAttributeInfoDTO>> attrInfoList(@PathVariable Long firstLevelCategoryId,@PathVariable Long secondLevelCategoryId,@PathVariable Long thirdLevelCategoryId){
         return Result.ok(platformAttributeService.getPlatformAttrInfoList(firstLevelCategoryId,secondLevelCategoryId,thirdLevelCategoryId));
     }
+
+    @GetMapping("getAttrValueList/{attrId}")
+    public Result<List<PlatformAttributeValueDTO>> getAttrValueList(@PathVariable Long attrId){
+        return Result.ok(platformAttributeService.getPlatformAttrInfo(attrId));
+    }
+
     @PostMapping("fileUpload")
     public  Result fileUpload(MultipartFile file) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         return Result.ok(fileService.fileUpload(file));
