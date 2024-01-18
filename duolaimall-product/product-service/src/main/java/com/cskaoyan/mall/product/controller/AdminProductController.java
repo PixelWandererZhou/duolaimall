@@ -7,7 +7,9 @@ import com.cskaoyan.mall.product.dto.SecondLevelCategoryDTO;
 import com.cskaoyan.mall.product.dto.ThirdLevelCategoryDTO;
 import com.cskaoyan.mall.product.service.CategoryService;
 import com.cskaoyan.mall.product.service.FileService;
+import com.cskaoyan.mall.product.service.PlatformAttributeService;
 import io.minio.errors.*;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +25,8 @@ public class AdminProductController {
     @Autowired
     CategoryService categoryService;
     @Autowired
+    PlatformAttributeService platformAttributeService;
+    @Autowired
     FileService fileService;
     @RequestMapping("getCategory1")
     public Result<List<FirstLevelCategoryDTO>> getCategory1(){
@@ -37,8 +41,8 @@ public class AdminProductController {
         return Result.ok(categoryService.getThirdLevelCategory(secondLevelCategoryId));
     }
     @GetMapping("attrInfoList/{firstLevelCategoryId}/{secondLevelCategoryId}/{thirdLevelCategoryId}")
-    public Result<List<PlatformAttributeInfoDTO>> attrInfoList(@PathVariable Long firstLevelCategoryId,Long secondLevelCategoryId,Long thirdLevelCategoryId){
-        return Result.ok();
+    public Result<List<PlatformAttributeInfoDTO>> attrInfoList(@PathVariable Long firstLevelCategoryId,@PathVariable Long secondLevelCategoryId,@PathVariable Long thirdLevelCategoryId){
+        return Result.ok(platformAttributeService.getPlatformAttrInfoList(firstLevelCategoryId,secondLevelCategoryId,thirdLevelCategoryId));
     }
     @PostMapping("fileUpload")
     public  Result fileUpload(MultipartFile file) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
