@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/admin/product/baseTrademark")
-public class BaseTrademarkController {
+public class TrademarkController {
     @Autowired
     TrademarkService trademarkService;
     @GetMapping("{page}/{limit}")

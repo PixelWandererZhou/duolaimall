@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.product.converter.dto;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.cskaoyan.mall.product.dto.TrademarkDTO;
 import com.cskaoyan.mall.product.dto.TrademarkPageDTO;
 
 import com.cskaoyan.mall.product.model.Trademark;
@@ -10,4 +11,5 @@ import org.mapstruct.Mapper;
 public interface TrademarkPageConverter {
 
     TrademarkPageDTO tradeMarkPagePO2PageDTO(IPage<Trademark> trademarkPage);
+    TrademarkDTO tradeMarkPO2DTO(Trademark trademark);
 }
