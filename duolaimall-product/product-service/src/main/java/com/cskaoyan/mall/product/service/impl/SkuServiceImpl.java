@@ -1,6 +1,8 @@
 package com.cskaoyan.mall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cskaoyan.mall.product.converter.dto.PlatformAttributeInfoConverter;
 import com.cskaoyan.mall.product.converter.dto.SkuInfoConverter;
 import com.cskaoyan.mall.product.converter.dto.SkuInfoPageConverter;
 import com.cskaoyan.mall.product.converter.param.SkuInfoParamConverter;
@@ -67,7 +69,10 @@ public class SkuServiceImpl implements SkuService {
 
     @Override
     public void onSale(Long skuId) {
-
+        // 修改skuInfo的isSale字段为1
+        SkuInfoDTO skuInfoDTO = getSkuInfo(skuId);
+        skuInfoDTO.setIsSale(1);
+        skuInfoMapper.updateById(skuInfoConverter.skuInfoDTO2PO(skuInfoDTO));
     }
 
     @Override
@@ -77,7 +82,19 @@ public class SkuServiceImpl implements SkuService {
 
     @Override
     public SkuInfoDTO getSkuInfo(Long skuId) {
-        return null;
+        // 查询skuInfo
+        SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
+        // 查询skuAttrValueList
+        List<SkuPlatformAttributeValue> skuPlatformAttributeValueList = skuPlatformAttrValueMapper.selectList(new QueryWrapper<SkuPlatformAttributeValue>().eq("sku_id", skuId));
+        // 查询skuSaleAttrValueList
+        List<SkuSaleAttributeValue> skuSaleAttributeValueList = skuSaleAttrValueMapper.selectList(new QueryWrapper<SkuSaleAttributeValue>().eq("sku_id", skuId));
+        // 将skuInfo转换为skuInfoDTO
+        SkuInfoDTO skuInfoDTO = skuInfoConverter.skuInfoPO2DTO(skuInfo);
+        // 将skuAttrValueList转换为skuAttrValueDTOList
+        skuInfoDTO.setSkuPlatformAttributeValueList(skuInfoConverter.skuPlatformAttributeValuePOs2DTOs(skuPlatformAttributeValueList));
+        // 将skuSaleAttrValueList转换为skuSaleAttrValueDTOList
+        skuInfoDTO.setSkuSaleAttributeValueList(skuInfoConverter.skuSaleAttributeValuePOs2DTOs(skuSaleAttributeValueList));
+        return skuInfoDTO;
     }
 
     @Override

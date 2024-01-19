@@ -24,4 +24,9 @@ public class SkuProductController {
         Page<SkuInfo> skuInfoPage = new Page<SkuInfo>(page, size);
         return Result.ok(skuService.getPage(skuInfoPage));
     }
+    @GetMapping("onSale/{skuId}")
+    public Result onSale(@PathVariable Long skuId){
+        skuService.onSale(skuId);
+        return Result.ok();
+    }
 }

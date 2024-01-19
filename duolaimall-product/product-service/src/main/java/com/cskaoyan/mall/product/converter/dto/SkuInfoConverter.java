@@ -10,16 +10,21 @@ import com.cskaoyan.mall.product.model.SkuPlatformAttributeValue;
 import com.cskaoyan.mall.product.model.SkuSaleAttributeValue;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface SkuInfoConverter {
 
     SkuInfoDTO skuInfoPO2DTO(SkuInfo skuInfo);
+    SkuInfo skuInfoDTO2PO(SkuInfoDTO skuInfoDTO);
 
     SkuImageDTO skuImagePO2DTO(SkuImage skuImage);
 
     SkuPlatformAttributeValueDTO skuPlatformAttributeValuePO2DTO(
             SkuPlatformAttributeValue skuPlatformAttributeValue);
+    List<SkuPlatformAttributeValueDTO> skuPlatformAttributeValuePOs2DTOs(
+            List<SkuPlatformAttributeValue> skuPlatformAttributeValue);
 
-    SkuSaleAttributeValueDTO skuSaleAttributeValuePOs2DTOs(
-            SkuSaleAttributeValue skuSaleAttributeValue);
+    List<SkuSaleAttributeValueDTO> skuSaleAttributeValuePOs2DTOs(
+            List<SkuSaleAttributeValue> skuSaleAttributeValue);
 }
