@@ -6,6 +6,8 @@ import com.cskaoyan.mall.product.dto.TrademarkPageDTO;
 import com.cskaoyan.mall.product.model.Trademark;
 import com.cskaoyan.mall.product.query.TrademarkParam;
 
+import java.util.List;
+
 public interface TrademarkService {
     /*
         根据品牌id，查询品牌
