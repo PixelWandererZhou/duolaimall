@@ -5,12 +5,10 @@ import com.cskaoyan.mall.common.result.Result;
 import com.cskaoyan.mall.product.dto.TrademarkDTO;
 import com.cskaoyan.mall.product.dto.TrademarkPageDTO;
 import com.cskaoyan.mall.product.model.Trademark;
+import com.cskaoyan.mall.product.query.TrademarkParam;
 import com.cskaoyan.mall.product.service.TrademarkService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin/product/baseTrademark")
@@ -27,5 +25,15 @@ public class TrademarkController {
     @GetMapping("get/{id}")
     public Result<TrademarkDTO> getBaseTrademarkInfo(@PathVariable Long id){
         return Result.ok(trademarkService.getTrademarkByTmId(id));
+    }
+    @PutMapping("update")
+    public Result updateBaseTrademark(@RequestBody TrademarkParam trademarkParam){
+        trademarkService.updateById(trademarkParam);
+        return Result.ok();
+    }
+    @DeleteMapping("remove/{id}")
+    public Result removeBaseTrademark(@PathVariable Long id){
+        trademarkService.removeById(id);
+        return Result.ok();
     }
 }

@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.product.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cskaoyan.mall.product.converter.dto.TrademarkConverter;
 import com.cskaoyan.mall.product.converter.dto.TrademarkPageConverter;
 import com.cskaoyan.mall.product.dto.TrademarkDTO;
 import com.cskaoyan.mall.product.dto.TrademarkPageDTO;
@@ -16,13 +17,15 @@ public class TrademarkServiceImpl implements TrademarkService {
     @Autowired
     TrademarkMapper trademarkMapper;
     @Autowired
+    TrademarkConverter trademarkConverter;
+    @Autowired
     TrademarkPageConverter trademarkPageConverter;
 
 
     @Override
     public TrademarkDTO getTrademarkByTmId(Long tmId) {
         Trademark trademark = trademarkMapper.selectById(tmId);
-        return trademarkPageConverter.tradeMarkPO2DTO(trademark);
+        return trademarkConverter.trademarkPO2DTO(trademark);
     }
 
     @Override
@@ -38,11 +41,12 @@ public class TrademarkServiceImpl implements TrademarkService {
 
     @Override
     public void updateById(TrademarkParam trademarkParam) {
-
+        Trademark trademark = trademarkConverter.trademarkParam2Trademark(trademarkParam);
+        trademarkMapper.updateById(trademark);
     }
 
     @Override
     public void removeById(Long id) {
-
+        trademarkMapper.deleteById(id);
     }
 }
