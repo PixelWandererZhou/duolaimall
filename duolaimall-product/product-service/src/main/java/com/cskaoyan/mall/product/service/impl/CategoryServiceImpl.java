@@ -99,7 +99,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void remove(Long thirdLevelCategoryId, Long trademarkId) {
-
+        Map<String,Object> map = new HashMap<>();
+        map.put("third_level_category_id",thirdLevelCategoryId);
+        map.put("trademark_id",trademarkId);
+        categoryTrademarkMapper.deleteByMap(map);
     }
 
     @Override

@@ -32,4 +32,9 @@ public class CategoryTrademarkController {
         List<TrademarkDTO> trademarkList = categoryService.findUnLinkedTrademarkList(thirdLevelCategoryId);
         return Result.ok(trademarkList);
     }
+    @DeleteMapping("remove/{thirdLevelCategoryId}/{trademarkId}")
+    public Result remove(@PathVariable Long thirdLevelCategoryId, @PathVariable Long trademarkId) {
+        categoryService.remove(thirdLevelCategoryId, trademarkId);
+        return Result.ok();
+    }
 }
