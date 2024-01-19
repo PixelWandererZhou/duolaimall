@@ -29,4 +29,10 @@ public class SkuProductController {
         skuService.onSale(skuId);
         return Result.ok();
     }
+//    http://localhost/admin/product/cancelSale/3
+    @GetMapping("cancelSale/{skuId}")
+    public Result offSale(@PathVariable Long skuId){
+        skuService.offSale(skuId);
+        return Result.ok();
+    }
 }

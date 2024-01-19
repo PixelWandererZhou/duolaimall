@@ -77,7 +77,10 @@ public class SkuServiceImpl implements SkuService {
 
     @Override
     public void offSale(Long skuId) {
-
+        // 修改skuInfo的isSale字段为0
+        SkuInfoDTO skuInfoDTO = getSkuInfo(skuId);
+        skuInfoDTO.setIsSale(0);
+        skuInfoMapper.updateById(skuInfoConverter.skuInfoDTO2PO(skuInfoDTO));
     }
 
     @Override
