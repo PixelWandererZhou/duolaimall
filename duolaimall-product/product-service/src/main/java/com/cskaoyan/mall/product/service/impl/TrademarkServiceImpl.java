@@ -36,7 +36,8 @@ public class TrademarkServiceImpl implements TrademarkService {
 
     @Override
     public void save(TrademarkParam trademarkParam) {
-
+        Trademark trademark = trademarkConverter.trademarkParam2Trademark(trademarkParam);
+        trademarkMapper.insert(trademark);
     }
 
     @Override

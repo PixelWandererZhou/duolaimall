@@ -36,4 +36,9 @@ public class TrademarkController {
         trademarkService.removeById(id);
         return Result.ok();
     }
+    @PostMapping("save")
+    public Result saveBaseTrademark(@RequestBody TrademarkParam trademarkParam){
+        trademarkService.save(trademarkParam);
+        return Result.ok();
+    }
 }
