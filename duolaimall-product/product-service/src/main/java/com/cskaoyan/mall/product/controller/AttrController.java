@@ -5,33 +5,21 @@ import com.cskaoyan.mall.product.dto.*;
 import com.cskaoyan.mall.product.query.PlatformAttributeParam;
 import com.cskaoyan.mall.product.query.PlatformAttributeValueParam;
 import com.cskaoyan.mall.product.service.CategoryService;
-import com.cskaoyan.mall.product.service.FileService;
 import com.cskaoyan.mall.product.service.PlatformAttributeService;
-import io.minio.errors.*;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/product")
-public class AdminProductController {
+public class AttrController {
     @Autowired
     CategoryService categoryService;
     @Autowired
     PlatformAttributeService platformAttributeService;
-    @Autowired
-    FileService fileService;
     @RequestMapping("getCategory1")
     public Result<List<FirstLevelCategoryDTO>> getCategory1(){
         return Result.ok(categoryService.getFirstLevelCategory());
@@ -91,8 +79,5 @@ public class AdminProductController {
         return Result.ok();
     }
 
-    @PostMapping("fileUpload")
-    public  Result fileUpload(MultipartFile file) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        return Result.ok(fileService.fileUpload(file));
-    }
+
 }
