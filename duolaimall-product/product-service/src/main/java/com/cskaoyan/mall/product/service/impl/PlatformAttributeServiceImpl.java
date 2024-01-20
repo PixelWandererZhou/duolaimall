@@ -38,7 +38,11 @@ public class PlatformAttributeServiceImpl implements PlatformAttributeService {
         //secondLevelCategoryId==0 && thirdLevelCategoryId==0
         if (secondLevelCategoryId==0 && thirdLevelCategoryId==0){
             platformAttributeInfoQueryWrapper.eq("category_id",firstLevelCategoryId);
-            return platformAttributeInfoConverter.platformAttributeInfoPOs2DTOs(platformAttrInfoMapper.selectList(platformAttributeInfoQueryWrapper));
+            List<PlatformAttributeInfoDTO> platformAttributeInfoDTOS = platformAttributeInfoConverter.platformAttributeInfoPOs2DTOs(platformAttrInfoMapper.selectList(platformAttributeInfoQueryWrapper));
+            for(PlatformAttributeInfoDTO platformAttributeInfoDTO : platformAttributeInfoDTOS){
+                platformAttributeInfoDTO.setAttrValueList(platformAttributeInfoConverter.platformAttributeValuesPO2DTOs(platformAttrValueMapper.selectList(new QueryWrapper<PlatformAttributeValue>().eq("attr_id",platformAttributeInfoDTO.getId()))));
+            }
+            return platformAttributeInfoDTOS;
         }
 
         //secondLevelCategoryId!=0 && thirdLevelCategoryId==0
@@ -47,8 +51,11 @@ public class PlatformAttributeServiceImpl implements PlatformAttributeService {
                     .eq("category_id",firstLevelCategoryId)
                     .or()
                     .eq("category_id",secondLevelCategoryId);
-            return platformAttributeInfoConverter.platformAttributeInfoPOs2DTOs(platformAttrInfoMapper.selectList(platformAttributeInfoQueryWrapper));
-        }
+            List<PlatformAttributeInfoDTO> platformAttributeInfoDTOS = platformAttributeInfoConverter.platformAttributeInfoPOs2DTOs(platformAttrInfoMapper.selectList(platformAttributeInfoQueryWrapper));
+            for(PlatformAttributeInfoDTO platformAttributeInfoDTO : platformAttributeInfoDTOS){
+                platformAttributeInfoDTO.setAttrValueList(platformAttributeInfoConverter.platformAttributeValuesPO2DTOs(platformAttrValueMapper.selectList(new QueryWrapper<PlatformAttributeValue>().eq("attr_id",platformAttributeInfoDTO.getId()))));
+            }
+            return platformAttributeInfoDTOS;        }
 
         //secondLevelCategoryId!=0 && thirdLevelCategoryId!=0
         if (secondLevelCategoryId != 0) {
@@ -58,8 +65,11 @@ public class PlatformAttributeServiceImpl implements PlatformAttributeService {
                     .eq("category_id",secondLevelCategoryId)
                     .or()
                     .eq("category_id",thirdLevelCategoryId);
-            return platformAttributeInfoConverter.platformAttributeInfoPOs2DTOs(platformAttrInfoMapper.selectList(platformAttributeInfoQueryWrapper));
-        }
+            List<PlatformAttributeInfoDTO> platformAttributeInfoDTOS = platformAttributeInfoConverter.platformAttributeInfoPOs2DTOs(platformAttrInfoMapper.selectList(platformAttributeInfoQueryWrapper));
+            for(PlatformAttributeInfoDTO platformAttributeInfoDTO : platformAttributeInfoDTOS){
+                platformAttributeInfoDTO.setAttrValueList(platformAttributeInfoConverter.platformAttributeValuesPO2DTOs(platformAttrValueMapper.selectList(new QueryWrapper<PlatformAttributeValue>().eq("attr_id",platformAttributeInfoDTO.getId()))));
+            }
+            return platformAttributeInfoDTOS;        }
         return null;
     }
 
