@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cskaoyan.mall.product.converter.dto.SpuInfoConverter;
 import com.cskaoyan.mall.product.converter.dto.SpuInfoPageConverter;
 import com.cskaoyan.mall.product.converter.param.SpuInfoParamConverter;
-import com.cskaoyan.mall.product.dto.*;
+import com.cskaoyan.mall.product.dto.SpuImageDTO;
+import com.cskaoyan.mall.product.dto.SpuInfoPageDTO;
+import com.cskaoyan.mall.product.dto.SpuPosterDTO;
+import com.cskaoyan.mall.product.dto.SpuSaleAttributeInfoDTO;
 import com.cskaoyan.mall.product.mapper.*;
 import com.cskaoyan.mall.product.model.*;
 import com.cskaoyan.mall.product.query.SpuInfoParam;
@@ -15,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class SpuServiceImpl implements SpuService {
@@ -62,6 +64,7 @@ public class SpuServiceImpl implements SpuService {
         spuInfoParam.getSpuPosterList().forEach(spuPosterParam -> {
             SpuPoster spuPoster = spuInfoParamConverter.spuPosterParam2Poster(spuPosterParam);
             spuPoster.setSpuId(spuId);
+            spuPoster.setSpuId(spuId);
             spuPosterMapper.insert(spuPoster);
         });
         // 保存spuSaleAttributeInfo信息
@@ -89,22 +92,18 @@ public class SpuServiceImpl implements SpuService {
     public List<SpuSaleAttributeInfoDTO> getSpuSaleAttrList(Long spuId) {
         //查询spuSaleAttributeInfo信息
         List<SpuSaleAttributeInfo> spuSaleAttributeInfos = spuSaleAttrInfoMapper.selectList(new QueryWrapper<SpuSaleAttributeInfo>().eq("spu_id", spuId));
-        //查询spuSaleAttributeValue信息
-        List<SpuSaleAttributeValue> spuSaleAttributeValues = spuSaleAttrValueMapper.selectList(new QueryWrapper<SpuSaleAttributeValue>().eq("spu_id", spuId));
-        //将spuSaleAttributeValue信息封装到spuSaleAttributeInfo中
-        spuSaleAttributeInfos.forEach(spuSaleAttributeInfo -> {
+        for(SpuSaleAttributeInfo spuSaleAttributeInfo : spuSaleAttributeInfos){
+            //查询spuSaleAttributeValue信息
+            List<SpuSaleAttributeValue> spuSaleAttributeValues = spuSaleAttrValueMapper.selectList(new QueryWrapper<SpuSaleAttributeValue>().eq("spu_id", spuId).eq("spu_sale_attr_id", spuSaleAttributeInfo.getSaleAttrId()));
+            //将spuSaleAttributeValue信息封装到spuSaleAttributeInfo中
             spuSaleAttributeInfo.setSpuSaleAttrValueList(spuSaleAttributeValues);
-        });
+        }
         return spuInfoConverter.spuSaleAttributeInfoPOs2DTOs(spuSaleAttributeInfos);
     }
 
     @Override
     public List<SpuPosterDTO> findSpuPosterBySpuId(Long spuId) {
-        return null;
-    }
-
-    @Override
-    public Map<String, Long> getSkuValueIdsMap(Long spuId) {
-        return null;
+        List<SpuPoster> spuPosters = spuPosterMapper.selectList(new QueryWrapper<SpuPoster>().eq("spu_id", spuId));
+        return spuInfoConverter.spuPosterPOs2DTOs(spuPosters);
     }
 }
