@@ -6,10 +6,7 @@ import com.cskaoyan.mall.product.converter.dto.PlatformAttributeInfoConverter;
 import com.cskaoyan.mall.product.converter.dto.SkuInfoConverter;
 import com.cskaoyan.mall.product.converter.dto.SkuInfoPageConverter;
 import com.cskaoyan.mall.product.converter.param.SkuInfoParamConverter;
-import com.cskaoyan.mall.product.dto.PlatformAttributeInfoDTO;
-import com.cskaoyan.mall.product.dto.SkuInfoDTO;
-import com.cskaoyan.mall.product.dto.SkuInfoPageDTO;
-import com.cskaoyan.mall.product.dto.SpuSaleAttributeInfoDTO;
+import com.cskaoyan.mall.product.dto.*;
 import com.cskaoyan.mall.product.mapper.SkuInfoMapper;
 import com.cskaoyan.mall.product.mapper.SkuPlatformAttrValueMapper;
 import com.cskaoyan.mall.product.mapper.SkuSaleAttrValueMapper;
@@ -22,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SkuServiceImpl implements SkuService {
@@ -54,6 +54,7 @@ public class SkuServiceImpl implements SkuService {
         // 保存skuSaleAttrValue信息
         skuInfoParam.getSkuSaleAttrValueList().forEach(skuSaleAttrValueParam -> {
             SkuSaleAttributeValue skuSaleAttributeValue = skuInfoParamConverter.skuSaleAttributeValueParam2Value(skuSaleAttrValueParam);
+            skuSaleAttributeValue.setSpuId(skuInfoParam.getSpuId());
             skuSaleAttributeValue.setSkuId(skuId);
             skuSaleAttrValueMapper.insert(skuSaleAttributeValue);
         });
@@ -64,7 +65,13 @@ public class SkuServiceImpl implements SkuService {
         // 查询skuInfo分页数据
         Page<SkuInfo> skuInfoPage = skuInfoMapper.selectPage(pageParam, null);
         // 将skuInfoPage转换为skuInfoPageDTO
-        return skuInfoPageConverter.skuInfoPagePO2PageDTO(skuInfoPage);
+        SkuInfoPageDTO skuInfoPageDTO = skuInfoPageConverter.skuInfoPagePO2PageDTO(skuInfoPage);
+        List<SkuInfoDTO> records = skuInfoPageDTO.getRecords();
+        for(SkuInfoDTO skuInfoDTO : records){
+            skuInfoDTO.setSkuPlatformAttributeValueList(getSkuPlatformAttributeValueBySku(skuInfoDTO.getId()));
+        }
+        skuInfoPageDTO.setRecords(records);
+        return skuInfoPageDTO;
     }
 
     @Override
@@ -113,5 +120,28 @@ public class SkuServiceImpl implements SkuService {
     @Override
     public List<PlatformAttributeInfoDTO> getPlatformAttrInfoBySku(Long skuId) {
         return null;
+    }
+    @Override
+    public Map<String, Long> getSkuValueIdsMap(Long spuId) {
+        //{"4478|4481":283,"4478|4480":282,"4479|4480":284,"4479|4481":286}
+        List<SkuSaleAttributeValue> skuSaleAttributeValueList = skuSaleAttrValueMapper.selectList(new QueryWrapper<SkuSaleAttributeValue>().eq("spu_id", spuId));
+        //查询skuid集合
+        List<Long> skuIds = skuSaleAttributeValueList.stream().map(SkuSaleAttributeValue::getSkuId).collect(Collectors.toList());
+        Map<String, Long> skuValueIdsMap = new HashMap<>();
+        for(Long skuid : skuIds){
+            //根据skuid查询spuattrvalueid集合
+            List<Long> spuSaleAttrValueIds = skuSaleAttributeValueList.stream().filter(skuSaleAttributeValue -> skuSaleAttributeValue.getSkuId().equals(skuid)).map(SkuSaleAttributeValue::getSpuSaleAttrValueId).collect(Collectors.toList());
+            //将spuattrvalueid集合转换为字符串,使用"|"拼接
+            String spuSaleAttrValueIdsStr = spuSaleAttrValueIds.stream().map(String::valueOf).collect(Collectors.joining("|"));
+            //将spuSaleAttrValueIdsStr和skuid封装到map中
+            skuValueIdsMap.put(spuSaleAttrValueIdsStr, skuid);
+        }
+
+        return skuValueIdsMap;
+    }
+
+    @Override
+    public List<SkuPlatformAttributeValueDTO> getSkuPlatformAttributeValueBySku(Long skuId) {
+        return skuInfoConverter.skuPlatformAttributeValuePOs2DTOs(skuPlatformAttrValueMapper.selectList(new QueryWrapper<SkuPlatformAttributeValue>().eq("sku_id", skuId)));
     }
 }

@@ -1,15 +1,13 @@
 package com.cskaoyan.mall.product.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cskaoyan.mall.product.dto.PlatformAttributeInfoDTO;
-import com.cskaoyan.mall.product.dto.SkuInfoDTO;
-import com.cskaoyan.mall.product.dto.SkuInfoPageDTO;
-import com.cskaoyan.mall.product.dto.SpuSaleAttributeInfoDTO;
+import com.cskaoyan.mall.product.dto.*;
 import com.cskaoyan.mall.product.model.SkuInfo;
 import com.cskaoyan.mall.product.query.SkuInfoParam;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface SkuService {
 
@@ -40,4 +38,6 @@ public interface SkuService {
     List<SpuSaleAttributeInfoDTO> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId);
 
     List<PlatformAttributeInfoDTO> getPlatformAttrInfoBySku(Long skuId);
+    Map<String, Long> getSkuValueIdsMap(Long spuId);
+    List<SkuPlatformAttributeValueDTO> getSkuPlatformAttributeValueBySku(Long skuId);
 }
