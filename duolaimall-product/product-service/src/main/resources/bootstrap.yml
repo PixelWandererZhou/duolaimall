@@ -2,11 +2,12 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: localhost:8848
+        server-addr: 192.168.5.92:8848
         file-extension: yaml
-        shared-configs: common.yaml
+        shared-configs:
+          - data-id: common.yaml
       discovery:
-        server-addr: localhost:8848
+        server-addr: 192.168.5.92:8848
   application:
     name: service-product
   profiles:
