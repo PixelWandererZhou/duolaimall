@@ -12,6 +12,7 @@ import com.cskaoyan.mall.product.model.Trademark;
 import com.cskaoyan.mall.product.query.CategoryTrademarkParam;
 import com.cskaoyan.mall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -108,29 +109,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "category",key = "'categoryTreeList'")
     public List<FirstLevelCategoryNodeDTO> getCategoryTreeList() {
-//        List<FirstLevelCategoryNodeDTO> firstLevelCategoryNodeDTOS = new ArrayList<>();
-//        List<FirstLevelCategoryDTO> firstLevelCategory = getFirstLevelCategory();
-//        //往一级目录里面添加二级目录
-//        for(FirstLevelCategoryDTO firstLevelCategoryDTO:firstLevelCategory){
-//            List<SecondLevelCategoryNodeDTO> categoryChild = new ArrayList<>();
-//            List<SecondLevelCategoryDTO> secondLevelCategory = getSecondLevelCategory(firstLevelCategoryDTO.getId());
-//            //往二级目录里面添加三级目录
-//            SecondLevelCategoryNodeDTO secondLevelCategoryNodeDTO = new SecondLevelCategoryNodeDTO();
-//            for(SecondLevelCategoryDTO secondLevelCategoryDTO:secondLevelCategory){
-//                List<ThirdLevelCategoryDTO> thirdLevelCategory = getThirdLevelCategory(secondLevelCategoryDTO.getId());
-//                secondLevelCategoryNodeDTO.setCategoryChild(categoryConverter.thirdLevelCategoryDTOs2NodeDTOs(thirdLevelCategory));
-//                secondLevelCategoryNodeDTO.setCategoryId(secondLevelCategoryDTO.getId());
-//                secondLevelCategoryNodeDTO.setCategoryName(secondLevelCategoryDTO.getName());
-//                categoryChild.add(secondLevelCategoryNodeDTO);
-//            }
-//            FirstLevelCategoryNodeDTO firstLevelCategoryNodeDTO = new FirstLevelCategoryNodeDTO();
-//            firstLevelCategoryNodeDTO.setCategoryChild(categoryChild);
-//            firstLevelCategoryNodeDTO.setCategoryId(firstLevelCategoryDTO.getId());
-//            firstLevelCategoryNodeDTO.setCategoryName(firstLevelCategoryDTO.getName());
-//            firstLevelCategoryNodeDTO.setIndex(firstLevelCategoryNodeDTO.getCategoryId().intValue());
-//            firstLevelCategoryNodeDTOS.add(firstLevelCategoryNodeDTO);
-//        }
         List<FirstLevelCategoryNodeDTO> firstLevelCategoryNodeDTOS = new ArrayList<>();
         //查询所有的一级目录
         List<FirstLevelCategoryDTO> firstLevelCategory = getFirstLevelCategory();
