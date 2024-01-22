@@ -31,4 +31,6 @@ public interface SpuService {
     List<SpuSaleAttributeInfoDTO> getSpuSaleAttrList(Long spuId);
 
     List<SpuPosterDTO> findSpuPosterBySpuId(Long spuId);
+
+    Map<String, Long> getSkuValueIdsMap(Long spuId);
 }
