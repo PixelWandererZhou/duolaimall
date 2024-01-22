@@ -2,8 +2,6 @@ package com.cskaoyan.mall.product.service;
 
 import com.cskaoyan.mall.product.dto.ProductDetailDTO;
 
-import java.util.Map;
-
 public interface ProductDetailService {
 
     /**

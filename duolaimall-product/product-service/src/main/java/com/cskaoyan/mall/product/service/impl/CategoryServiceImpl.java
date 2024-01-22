@@ -5,10 +5,7 @@ import com.cskaoyan.mall.product.converter.dto.CategoryConverter;
 import com.cskaoyan.mall.product.converter.dto.TrademarkConverter;
 import com.cskaoyan.mall.product.dto.*;
 import com.cskaoyan.mall.product.mapper.*;
-import com.cskaoyan.mall.product.model.CategoryTrademark;
-import com.cskaoyan.mall.product.model.SecondLevelCategory;
-import com.cskaoyan.mall.product.model.ThirdLevelCategory;
-import com.cskaoyan.mall.product.model.Trademark;
+import com.cskaoyan.mall.product.model.*;
 import com.cskaoyan.mall.product.query.CategoryTrademarkParam;
 import com.cskaoyan.mall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,8 @@ public class CategoryServiceImpl implements CategoryService {
     TrademarkMapper trademarkMapper;
     @Autowired
     CategoryTrademarkMapper categoryTrademarkMapper;
+    @Autowired
+    CategoryHierarchyMapper categoryHierarchyMapper;
 
     @Autowired
     TrademarkConverter trademarkConverter;
@@ -105,6 +104,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryHierarchyDTO getCategoryViewByCategoryId(Long thirdLevelCategoryId) {
+        List<CategoryHierarchy> categoryHierarchies = categoryHierarchyMapper.selectCategoryHierarchy(thirdLevelCategoryId);
+        if(categoryHierarchies.size()==1){
+            return categoryConverter.categoryViewPO2DTO(categoryHierarchies.get(0));
+        }
         return null;
     }
 
