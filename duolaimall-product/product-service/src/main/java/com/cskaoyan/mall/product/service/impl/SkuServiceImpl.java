@@ -2,14 +2,12 @@ package com.cskaoyan.mall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cskaoyan.mall.product.converter.dto.PlatformAttributeInfoConverter;
 import com.cskaoyan.mall.product.converter.dto.SkuInfoConverter;
 import com.cskaoyan.mall.product.converter.dto.SkuInfoPageConverter;
 import com.cskaoyan.mall.product.converter.param.SkuInfoParamConverter;
 import com.cskaoyan.mall.product.dto.*;
-import com.cskaoyan.mall.product.mapper.SkuInfoMapper;
-import com.cskaoyan.mall.product.mapper.SkuPlatformAttrValueMapper;
-import com.cskaoyan.mall.product.mapper.SkuSaleAttrValueMapper;
+import com.cskaoyan.mall.product.mapper.*;
+import com.cskaoyan.mall.product.model.SkuImage;
 import com.cskaoyan.mall.product.model.SkuInfo;
 import com.cskaoyan.mall.product.model.SkuPlatformAttributeValue;
 import com.cskaoyan.mall.product.model.SkuSaleAttributeValue;
@@ -31,9 +29,13 @@ public class SkuServiceImpl implements SkuService {
     @Autowired
     SkuPlatformAttrValueMapper skuPlatformAttrValueMapper;
     @Autowired
-    SkuInfoConverter skuInfoConverter;
-    @Autowired
     SkuSaleAttrValueMapper skuSaleAttrValueMapper;
+    @Autowired
+    SkuImageMapper skuImageMapper;
+    @Autowired
+    SpuImageMapper spuImageMapper;
+    @Autowired
+    SkuInfoConverter skuInfoConverter;
     @Autowired
     SkuInfoParamConverter skuInfoParamConverter;
     @Autowired
@@ -98,12 +100,15 @@ public class SkuServiceImpl implements SkuService {
         List<SkuPlatformAttributeValue> skuPlatformAttributeValueList = skuPlatformAttrValueMapper.selectList(new QueryWrapper<SkuPlatformAttributeValue>().eq("sku_id", skuId));
         // 查询skuSaleAttrValueList
         List<SkuSaleAttributeValue> skuSaleAttributeValueList = skuSaleAttrValueMapper.selectList(new QueryWrapper<SkuSaleAttributeValue>().eq("sku_id", skuId));
+        //查询skuImageList
+        List<SkuImageDTO> skuImageList = getSkuImageList(skuId);
         // 将skuInfo转换为skuInfoDTO
         SkuInfoDTO skuInfoDTO = skuInfoConverter.skuInfoPO2DTO(skuInfo);
         // 将skuAttrValueList转换为skuAttrValueDTOList
         skuInfoDTO.setSkuPlatformAttributeValueList(skuInfoConverter.skuPlatformAttributeValuePOs2DTOs(skuPlatformAttributeValueList));
         // 将skuSaleAttrValueList转换为skuSaleAttrValueDTOList
         skuInfoDTO.setSkuSaleAttributeValueList(skuInfoConverter.skuSaleAttributeValuePOs2DTOs(skuSaleAttributeValueList));
+        skuInfoDTO.setSkuImageList(skuImageList);
         return skuInfoDTO;
     }
 
@@ -121,27 +126,20 @@ public class SkuServiceImpl implements SkuService {
     public List<PlatformAttributeInfoDTO> getPlatformAttrInfoBySku(Long skuId) {
         return null;
     }
-    @Override
-    public Map<String, Long> getSkuValueIdsMap(Long spuId) {
-        //{"4478|4481":283,"4478|4480":282,"4479|4480":284,"4479|4481":286}
-        List<SkuSaleAttributeValue> skuSaleAttributeValueList = skuSaleAttrValueMapper.selectList(new QueryWrapper<SkuSaleAttributeValue>().eq("spu_id", spuId));
-        //查询skuid集合
-        List<Long> skuIds = skuSaleAttributeValueList.stream().map(SkuSaleAttributeValue::getSkuId).collect(Collectors.toList());
-        Map<String, Long> skuValueIdsMap = new HashMap<>();
-        for(Long skuid : skuIds){
-            //根据skuid查询spuattrvalueid集合
-            List<Long> spuSaleAttrValueIds = skuSaleAttributeValueList.stream().filter(skuSaleAttributeValue -> skuSaleAttributeValue.getSkuId().equals(skuid)).map(SkuSaleAttributeValue::getSpuSaleAttrValueId).collect(Collectors.toList());
-            //将spuattrvalueid集合转换为字符串,使用"|"拼接
-            String spuSaleAttrValueIdsStr = spuSaleAttrValueIds.stream().map(String::valueOf).collect(Collectors.joining("|"));
-            //将spuSaleAttrValueIdsStr和skuid封装到map中
-            skuValueIdsMap.put(spuSaleAttrValueIdsStr, skuid);
-        }
 
-        return skuValueIdsMap;
-    }
 
     @Override
     public List<SkuPlatformAttributeValueDTO> getSkuPlatformAttributeValueBySku(Long skuId) {
         return skuInfoConverter.skuPlatformAttributeValuePOs2DTOs(skuPlatformAttrValueMapper.selectList(new QueryWrapper<SkuPlatformAttributeValue>().eq("sku_id", skuId)));
+    }
+    @Override
+    public List<SkuImageDTO> getSkuImageList(Long skuId){
+        List<SkuImage> skuImages = skuImageMapper.selectList(new QueryWrapper<SkuImage>().eq("sku_id", skuId));
+        for (SkuImage skuImage : skuImages) {
+            //查询imageUrl和imageName
+            skuImage.setImgUrl(spuImageMapper.selectById(skuImage.getSpuImgId()).getImgUrl());
+            skuImage.setImgName(spuImageMapper.selectById(skuImage.getSpuImgId()).getImgName());
+        }
+        return skuInfoConverter.skuImagePOs2DTOs(skuImages);
     }
 }
