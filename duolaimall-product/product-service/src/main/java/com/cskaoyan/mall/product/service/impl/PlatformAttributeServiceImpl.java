@@ -79,7 +79,7 @@ public class PlatformAttributeServiceImpl implements PlatformAttributeService {
         UpdateWrapper<PlatformAttributeInfo> platformAttributeInfoUpdateWrapper = new UpdateWrapper<>();
         platformAttributeInfoUpdateWrapper
                 .eq("category_id",platformAttributeParam.getCategoryId());
-        int i = platformAttrInfoMapper.update(platformAttributeInfoParamConverter.attributeInfoParam2Info(platformAttributeParam), platformAttributeInfoUpdateWrapper);
+        platformAttrInfoMapper.update(platformAttributeInfoParamConverter.attributeInfoParam2Info(platformAttributeParam), platformAttributeInfoUpdateWrapper);
         if(platformAttributeParam.getAttrValueList()!=null){
             //delete all attrValueList
             Map<String,Object> map = new HashMap<>();

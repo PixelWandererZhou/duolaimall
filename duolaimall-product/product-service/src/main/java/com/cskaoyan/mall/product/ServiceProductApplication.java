@@ -1,11 +1,6 @@
 package com.cskaoyan.mall.product;
 
-import com.cskaoyan.mall.common.constant.RedisConst;
 import org.mybatis.spring.annotation.MapperScan;
-import org.redisson.api.RBloomFilter;
-import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

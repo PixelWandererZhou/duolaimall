@@ -12,8 +12,6 @@ import com.cskaoyan.mall.product.service.TrademarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class TrademarkServiceImpl implements TrademarkService {
     @Autowired

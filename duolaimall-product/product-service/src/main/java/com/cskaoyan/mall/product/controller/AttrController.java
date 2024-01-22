@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin/product")
+@RequestMapping(value = "/admin/product")
 public class AttrController {
     @Autowired
     CategoryService categoryService;
