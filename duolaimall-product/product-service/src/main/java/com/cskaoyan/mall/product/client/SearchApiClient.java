@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.product.client;
 
 import com.cskaoyan.mall.common.result.Result;
+import com.cskaoyan.mall.search.param.SearchParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,4 +16,10 @@ public interface SearchApiClient {
      */
     @GetMapping("/api/list/inner/incrHotScore/{skuId}")
     Result incrHotScore(@PathVariable("skuId") Long skuId);
+    @GetMapping("/api/list/inner/upperGoods/{skuId}")
+    Result upperGoods(@PathVariable("skuId") Long skuId);
+    @GetMapping("/api/list/inner/lowerGoods/{skuId}")
+    Result lowerGoods(@PathVariable("skuId") Long skuId);
+    @GetMapping("/api/list")
+    Result list(SearchParam searchParam);
 }

@@ -34,7 +34,6 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     CategoryHierarchyMapper categoryHierarchyMapper;
 
     @Override
-    @Cacheable(value = "productDetail",key = "#skuId")
     public ProductDetailDTO getItemBySkuId(Long skuId) {
         ProductDetailDTO productDetailDTO = new ProductDetailDTO();
         // 查询skuinfo

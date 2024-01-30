@@ -1,16 +1,12 @@
 package com.cskaoyan.mall.search.client;
 
-import com.cskaoyan.mall.common.result.Result;
 import com.cskaoyan.mall.product.dto.CategoryHierarchyDTO;
 import com.cskaoyan.mall.product.dto.PlatformAttributeInfoDTO;
 import com.cskaoyan.mall.product.dto.SkuInfoDTO;
 import com.cskaoyan.mall.product.dto.TrademarkDTO;
-import com.cskaoyan.mall.search.param.SearchParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 

@@ -2,6 +2,7 @@ package com.cskaoyan.mall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cskaoyan.mall.product.client.SearchApiClient;
 import com.cskaoyan.mall.product.converter.dto.SkuInfoConverter;
 import com.cskaoyan.mall.product.converter.dto.SkuInfoPageConverter;
 import com.cskaoyan.mall.product.converter.param.SkuInfoParamConverter;
@@ -37,6 +38,8 @@ public class SkuServiceImpl implements SkuService {
     SkuInfoParamConverter skuInfoParamConverter;
     @Autowired
     SkuInfoPageConverter skuInfoPageConverter;
+    @Autowired
+    SearchApiClient searchApiClient;
     @Override
     public void saveSkuInfo(SkuInfoParam skuInfoParam) {
         // 保存skuInfo信息
@@ -79,6 +82,8 @@ public class SkuServiceImpl implements SkuService {
         SkuInfoDTO skuInfoDTO = getSkuInfo(skuId);
         skuInfoDTO.setIsSale(1);
         skuInfoMapper.updateById(skuInfoConverter.skuInfoDTO2PO(skuInfoDTO));
+        //调用搜索服务上架商品
+        searchApiClient.upperGoods(skuId);
     }
 
     @Override
@@ -87,6 +92,8 @@ public class SkuServiceImpl implements SkuService {
         SkuInfoDTO skuInfoDTO = getSkuInfo(skuId);
         skuInfoDTO.setIsSale(0);
         skuInfoMapper.updateById(skuInfoConverter.skuInfoDTO2PO(skuInfoDTO));
+        //调用搜索服务下架商品
+        searchApiClient.lowerGoods(skuId);
     }
 
     @Override

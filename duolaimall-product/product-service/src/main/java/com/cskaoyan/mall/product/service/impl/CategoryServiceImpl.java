@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -112,32 +113,33 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Cacheable(value = "category",key = "'categoryTreeList'")
     public List<FirstLevelCategoryNodeDTO> getCategoryTreeList() {
-        List<FirstLevelCategoryNodeDTO> firstLevelCategoryNodeDTOS = new ArrayList<>();
         //查询所有的一级目录
         List<FirstLevelCategoryDTO> firstLevelCategory = getFirstLevelCategory();
+        //查询所有的二级目录
+        List<SecondLevelCategoryDTO> secondLevelCategory = categoryConverter.secondLevelCategoryPOs2DTOs(secondLevelCategoryMapper.selectList(null));
+        //查询所有的三级目录
+        List<ThirdLevelCategoryDTO> thirdLevelCategory = categoryConverter.thirdLevelCategoryPOs2DTOs(thirdLevelCategoryMapper.selectList(null));
         //将一级目录转换成一级目录节点
         List<FirstLevelCategoryNodeDTO> firstLevelCategoryNodeDTOs = categoryConverter.firstLevelCategoryDTOs2NodeDTOs(firstLevelCategory);
-        //遍历一级目录节点，将二级目录添加到一级目录节点中
+        //遍历一级目录节点，筛选出该一级目录下的所有二级目录并转换为二级目录节点
         for(FirstLevelCategoryNodeDTO firstLevelCategoryNodeDTO : firstLevelCategoryNodeDTOs){
-            //查询该一级目录下的所有二级目录
-            List<SecondLevelCategoryDTO> secondLevelCategory = getSecondLevelCategory(firstLevelCategoryNodeDTO.getCategoryId());
+            //筛选出该一级目录下的所有二级目录
+            List<SecondLevelCategoryDTO> secondLevelCategoryDTOS = secondLevelCategory.stream().filter(secondLevelCategoryDTO -> secondLevelCategoryDTO.getFirstLevelCategoryId().equals(firstLevelCategoryNodeDTO.getCategoryId())).collect(Collectors.toList());
             //将二级目录转换成二级目录节点
-            List<SecondLevelCategoryNodeDTO> secondLevelCategoryNodeDTOs = categoryConverter.secondLevelCategoryDTOs2NodeDTOs(secondLevelCategory);
-            //遍历二级目录节点，将三级目录添加到二级目录节点中
+            List<SecondLevelCategoryNodeDTO> secondLevelCategoryNodeDTOs = categoryConverter.secondLevelCategoryDTOs2NodeDTOs(secondLevelCategoryDTOS);
+            //遍历二级目录节点，筛选出该二级目录下的所有三级目录并转换为三级目录节点
             for(SecondLevelCategoryNodeDTO secondLevelCategoryNodeDTO : secondLevelCategoryNodeDTOs){
-                //查询该二级目录下的所有三级目录
-                List<ThirdLevelCategoryDTO> thirdLevelCategory = getThirdLevelCategory(secondLevelCategoryNodeDTO.getCategoryId());
+                //筛选出该二级目录下的所有三级目录
+                List<ThirdLevelCategoryDTO> thirdLevelCategoryDTOS = thirdLevelCategory.stream().filter(thirdLevelCategoryDTO -> thirdLevelCategoryDTO.getSecondLevelCategoryId().equals(secondLevelCategoryNodeDTO.getCategoryId())).collect(Collectors.toList());
                 //将三级目录转换成三级目录节点
-                List<ThirdLevelCategoryNodeDTO> thirdLevelCategoryNodeDTOs = categoryConverter.thirdLevelCategoryDTOs2NodeDTOs(thirdLevelCategory);
+                List<ThirdLevelCategoryNodeDTO> thirdLevelCategoryNodeDTOs = categoryConverter.thirdLevelCategoryDTOs2NodeDTOs(thirdLevelCategoryDTOS);
                 //将三级目录节点添加到二级目录节点中
                 secondLevelCategoryNodeDTO.setCategoryChild(thirdLevelCategoryNodeDTOs);
             }
             //将二级目录节点添加到一级目录节点中
             firstLevelCategoryNodeDTO.setCategoryChild(secondLevelCategoryNodeDTOs);
         }
-
         return firstLevelCategoryNodeDTOs;
     }
 }
