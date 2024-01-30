@@ -3,12 +3,13 @@ package com.cskaoyan.mall.cart.api.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 
 @Data
-public class CartInfoDTO {
+public class CartInfoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String userId;
