@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: service-payment
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.190.128:8848
+      config:
+        server-addr: 192.168.190.128:8848
+        file-extension: yaml
+        shared-configs:
+          - data-id: common.yaml
+alipay:
+  config:
+    appId: 2021000122645312
+    alipayUrl: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+    appPrivateKey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDbUYbxiQfsINYcSxkeCiEZLTJJh2Tb7XhiR/59ECRyF+EYqJWOcWscLa5KyH9gjjmvaXYR6AWtOKkBTZODiEnHJ0WjlWXzj4P1A2F3pQUXrUPf7Guzpk8MQO3Gr2fXiUbRyp7uTC1AqTP8PhcgVsuzwrVClWdVMzPfhr9EKYPNr6rXmDxIYpPcDS7f64UQZsYyjt6Fu91IEH3UMRrULIyd2DdRSBgkXz5qLu0bAC2WaQihJwQY1OAYWr/J4ldZqiX0APVeY3kUoojds1r3jd4j8n/aEkOiZAGhrKG5mWsnLngWdiQxG29d5+AmWURcVcAHWf6T5g8jo6ObuXKxrtIRAgMBAAECggEBAM9trFOFZxjNdbQM0xS2P9ewB3/DroDTeKh7rxZZzh6atyq7R7gRTVy5V78jIlYQLj7ZX/JPoA7VKAMze/FLVXwmiJbPFj3l3sg9ClI+oTJjjW6cDME86kaMolboTy5rh6+kE+0N3z7oyWIo13aeoMrDvOvcon7Sjp06tGujWCWP36iSHOlvI/1eir8IQwa8Q+4Qf4HgHHBq+Aw6XCF/16CNNnvJUn64vZI6YSHkCXEiF6MOaj52WnJjxm6rxVcoYPHZTZfDX8c/01ZdPhNF0CjlFYB3plUPEl+JpINYaYE3gEMh3bifwLJBVtyVyGJbG12TsNAYs3bDUTQZDEg5HoECgYEA70VTeDQlz4ClEIA+I6+6hDkkw1TFRK6IEEYhiTzGlAGYsNgV04xICltQX9kVFgeCJeLeyAGa5Wz0urXAUozQ3KYn34skqU0tRVL2OSDBpw9e82anzwMqlwomcru4RnuceTIYwgmr2ILLWkHR2BAfKJQTjmLft5xMBacoFx09xaMCgYEA6qcTtfS7lpOyoAkqAHCq5FwwKadAN8m960dHCu8r2QWP6uFXep2YV5CN/AaOREYqHtszbiCbi3v1lCKYfIckYztecK7UlmBfWNxY3jxIbzBgAvpuqBz0h1fWhaMYmUOvmBde90G/LdgQMbadvPMe8Z2jKEd0Bcm56do5mY8h/LsCgYBvIWzmTJovKVoBMv8phgoENaJMkwfYoZOSs3AKFM9KmP85S/O/QM2I+eZ3zhTMGYqqXBgLHyu5WYTFX3tHHB46DXZBjpflhnH7W8/+sqcfF7WLKWfRb3ANnOpEqcmp+umvJMR5AxLsybr3XdDAIKTILRZ0MJol5pMsoPmu2qcBLwKBgCJYAdKH10zaoTI7JSKbWufBdmsiR4viwyFEdWlsSAajgcTm5l7T4hAu4Bka/IeRnWiWvJhJvXpU0kS0K41OWk0Ly27Cp+q6gDoJRhiAyjk741GMRdXlJwUIHiXBEUCdX33rLcMSpGCZVwVvrPaSvtyuLcsfaiPOup83iWaoRFkxAoGBALWKrIzfZ1TzANjKkpxbjdgDmizx92rt91Ok9PtukCDAisxYC89u1t04PPhT9BiHm+e34bPz5JmuRwW2qcEAoWZ8+aguqfRCgVRrNDgnt/xnyY0YDwQs4wNEsn6cvBeEk5QQouMqi3BOusJ7iW4aRh8La6fSZWzhC9tSspWK23W5
+    alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiRYOWclbQY6BtEwj/AcHz+fPZcSQvE4IwgMp6iIWZIlo139Z8nIadebdsOeojopK7J/b1eCXefkl2pNa9322petsQdbqUlRimPa0uax+/rOlv7bPyV9wCEYoqCIlNBD/e/79iLNUXAKELWjPPIzTzfyITxF9VCD0uD4U9iS5X4s2OzDXy7UW3CqOoKsA1bLTylFYdWPYqDVo2vRZ1BNmZsIhfLOZExIagaXTxdxKFnIXh9dVjlsUrxZZ1bMpabwhNXgHlP7q7Nr4i8egyC75xl2kPwGWK+L6nLphFDALTIU7FHG0KiZcgitkoBsBMjP6XrTwyPoxc/RIRtB3fWTwrwIDAQAB
+    returnPaymentUrl: http://localhost:8205/api/payment/alipay/alipay/callback/return
+    notifyPaymentUrl: 3r17294h06.goho.co:39009/api/payment/alipay/callback/notify
