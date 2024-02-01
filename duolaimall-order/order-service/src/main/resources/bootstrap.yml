@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: service-order
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.5.98:8848
+      config:
+        server-addr: 192.168.5.98:8848
+        file-extension: yaml
+        shared-configs:
+          - data-id: common.yaml
