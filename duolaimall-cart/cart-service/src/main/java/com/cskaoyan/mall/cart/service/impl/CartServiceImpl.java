@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -144,7 +145,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<CartInfoDTO> getCartCheckedList(String userId) {
-        return null;
+        //获取用户购物车
+        String key = RedisConst.USER_KEY_PREFIX+ userId + RedisConst.USER_CART_KEY_SUFFIX;
+        RMap<Long, CartInfoDTO> map = redissonSingle.getMap(key);
+        //获取购物车中的所有isCheck为1的商品
+        ArrayList<CartInfoDTO> cartInfoDTOS = new ArrayList<>(map.values());
+        return cartInfoDTOS.stream().filter(cartInfoDTO -> cartInfoDTO.getIsChecked() == 1).collect(Collectors.toList());
     }
 
     @Override

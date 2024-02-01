@@ -1,5 +1,6 @@
 package com.cskaoyan.mall.search;
 
+import org.dromara.easyes.starter.register.EsMapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan({"com.cskaoyan.mall"})
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages= {"com.cskaoyan.mall"})
+@EsMapperScan("com.cskaoyan.mall.search.mapper")
 public class ServiceSearchApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServiceSearchApplication.class,args);

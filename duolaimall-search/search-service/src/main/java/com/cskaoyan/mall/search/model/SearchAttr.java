@@ -1,18 +1,14 @@
 package com.cskaoyan.mall.search.model;
 
 import lombok.Data;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.dromara.easyes.annotation.IndexName;
 
 @Data
 public class SearchAttr {
     // 平台属性Id
-    @Field(type = FieldType.Long)
     private Long attrId;
     // 平台属性值名称
-    @Field(type = FieldType.Keyword)
     private String attrValue;
     // 平台属性名
-    @Field(type = FieldType.Keyword)
     private String attrName;
 }

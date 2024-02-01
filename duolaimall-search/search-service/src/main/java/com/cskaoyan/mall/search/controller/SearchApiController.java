@@ -46,4 +46,9 @@ public class SearchApiController {
         searchService.lowerGoods(skuId);
         return Result.ok();
     }
+    @GetMapping("inner/incrHotScore/{skuId}")
+    public Result incrHotScore(@PathVariable("skuId") Long skuId) {
+        searchService.incrHotScore(skuId);
+        return Result.ok();
+    }
 }

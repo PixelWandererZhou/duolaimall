@@ -1,23 +1,24 @@
 package com.cskaoyan.mall.search.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cskaoyan.mall.product.dto.*;
 import com.cskaoyan.mall.search.client.ProductApiClient;
+import com.cskaoyan.mall.search.dto.GoodsDTO;
 import com.cskaoyan.mall.search.dto.SearchResponseDTO;
 import com.cskaoyan.mall.search.dto.SearchResponseTmDTO;
+import com.cskaoyan.mall.search.mapper.GoodsMapper;
 import com.cskaoyan.mall.search.model.Goods;
 import com.cskaoyan.mall.search.model.SearchAttr;
 import com.cskaoyan.mall.search.param.SearchParam;
 import com.cskaoyan.mall.search.service.SearchService;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.dromara.easyes.core.core.EsWrappers;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,9 @@ public class SearchServiceImpl implements SearchService {
     @Autowired
     private ProductApiClient productFeignClient;
     @Autowired
-    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+    GoodsMapper goodsMapper;
+    @Autowired
+    RedissonClient redissonClient;
 
     @Override
     public void upperGoods(Long skuId) {
@@ -66,21 +69,37 @@ public class SearchServiceImpl implements SearchService {
             goods.setAttrs(searchAttrList);
         }
         //保存到es中
-        elasticsearchRestTemplate.save(goods);
+        goodsMapper.insert(goods);
     }
 
     @Override
     public void lowerGoods(Long skuId) {
-        elasticsearchRestTemplate.delete(skuId.toString(), Goods.class);
+        goodsMapper.deleteById(skuId);
     }
 
     @Override
     public void incrHotScore(Long skuId) {
-
+        // 定义key
+        String hotKey = "hotScore";
+        // 保存数据
+        Double hotScore = redissonClient.getScoredSortedSet(hotKey).addScore("skuId:" + skuId, 1);
+        if (hotScore.longValue() % 10 == 0) {
+            // 更新es
+            Goods goods = goodsMapper.selectById(skuId);
+            goods.setHotScore(Math.round(hotScore));
+            goodsMapper.insert(goods);
+        }
     }
 
     @Override
     public SearchResponseDTO search(SearchParam searchParam) throws IOException {
+        //先查商品列表
+        List<GoodsDTO> goodsList = new ArrayList<>();
+        //构造查询条件
+        List<Goods> list = EsWrappers.lambdaChainQuery(goodsMapper)
+                .eq(Goods::getTitle, searchParam.getKeyword())
+                .eq(Goods::getTmId, searchParam.getTrademark())
+                .list();
         return null;
     }
 }

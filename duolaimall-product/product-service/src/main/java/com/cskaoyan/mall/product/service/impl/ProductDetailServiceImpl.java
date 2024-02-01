@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.product.service.impl;
 
 import com.alibaba.nacos.common.utils.JacksonUtils;
+import com.cskaoyan.mall.product.client.SearchApiClient;
 import com.cskaoyan.mall.product.dto.*;
 import com.cskaoyan.mall.product.mapper.CategoryHierarchyMapper;
 import com.cskaoyan.mall.product.mapper.PlatformAttrInfoMapper;
@@ -32,6 +33,8 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     PlatformAttrValueMapper platformAttrValueMapper;
     @Autowired
     CategoryHierarchyMapper categoryHierarchyMapper;
+    @Autowired
+    SearchApiClient searchApiClient;
 
     @Override
     public ProductDetailDTO getItemBySkuId(Long skuId) {
@@ -74,6 +77,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         productDetailDTO.setSpuPosterList(spuPosterList);
         productDetailDTO.setValuesSkuJson(valuesSkuJson);
         productDetailDTO.setCategoryHierarchy(categoryHierarchy);
+        searchApiClient.incrHotScore(skuId);
         return productDetailDTO;
     }
 }
