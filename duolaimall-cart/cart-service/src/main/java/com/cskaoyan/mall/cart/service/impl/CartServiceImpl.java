@@ -155,11 +155,27 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void delete(String userId, List<Long> skuIds) {
-
+        //获取用户购物车
+        String key = RedisConst.USER_KEY_PREFIX+ userId + RedisConst.USER_CART_KEY_SUFFIX;
+        RMap<Long, CartInfoDTO> map = redissonSingle.getMap(key);
+        //删除购物车中的对应商品
+        for (Long skuId : skuIds) {
+            map.remove(skuId);
+        }
     }
 
     @Override
     public void refreshCartPrice(String userId, Long skuId) {
-
+        //查询skuInfo
+        SkuInfoDTO skuInfo = productApiClient.getSkuInfo(skuId);
+        //获取用户购物车
+        String key = RedisConst.USER_KEY_PREFIX+ userId + RedisConst.USER_CART_KEY_SUFFIX;
+        RMap<Long, CartInfoDTO> map = redissonSingle.getMap(key);
+        //获取购物车中对应skuId的商品
+        CartInfoDTO cartInfoDTO = map.get(skuId);
+        //更新商品价格
+        cartInfoDTO.setSkuPrice(skuInfo.getPrice());
+        //存入redis
+        map.put(skuId, cartInfoDTO);
     }
 }

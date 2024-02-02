@@ -4,10 +4,7 @@ import com.cskaoyan.mall.cart.api.dto.CartInfoDTO;
 import com.cskaoyan.mall.cart.service.CartService;
 import com.cskaoyan.mall.common.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +16,15 @@ public class CartApiController {
     @GetMapping("getCartCheckedList/{userId}")
     public List<CartInfoDTO> getCartCheckedList(@PathVariable(value = "userId") String userId){
         return cartService.getCartCheckedList(userId);
+    }
+    @GetMapping("refresh/{userId}/{skuId}")
+    public Result refreshCartPrice(@PathVariable(value = "userId") String userId, @PathVariable(value = "skuId") Long skuId){
+        cartService.refreshCartPrice(userId,skuId);
+        return Result.ok();
+    }
+    @PutMapping("delete/order/cart/{userId}")
+    public Result removeCartProductsInOrder(@PathVariable("userId") String userId, @RequestBody List<Long> skuIds){
+        cartService.delete(userId,skuIds);
+        return Result.ok();
     }
 }
