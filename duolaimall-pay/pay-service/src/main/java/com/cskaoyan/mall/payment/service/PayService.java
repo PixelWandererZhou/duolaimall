@@ -1,5 +1,6 @@
 package com.cskaoyan.mall.payment.service;
 
+import com.alipay.api.AlipayApiException;
 import com.cskaoyan.mall.order.dto.OrderInfoDTO;
 import com.cskaoyan.mall.pay.api.dto.PaymentInfoDTO;
 import com.cskaoyan.mall.payment.constant.PaymentStatus;
@@ -11,7 +12,7 @@ public interface PayService {
     /**
      * 支付宝支付，获取支付表单
      */
-    String createAliPay(Long orderId);
+    String createAliPay(Long orderId) throws AlipayApiException;
 
     /**
      * 保存支付记录
