@@ -1,5 +1,6 @@
 package com.cskaoyan.mall.order.converter;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cskaoyan.mall.order.dto.OrderInfoDTO;
 import com.cskaoyan.mall.order.model.OrderDetail;
 import com.cskaoyan.mall.order.model.OrderInfo;
@@ -10,10 +11,14 @@ import com.cskaoyan.mall.ware.api.dto.WareOrderTaskDetailDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface OrderInfoConverter {
 
     OrderInfoDTO convertOrderInfoToOrderInfoDTO(OrderInfo orderInfo);
+    List<OrderInfoDTO> convertOrderInfoListToOrderInfoDTOList(List<OrderInfo> orderInfoList);
+    Page<OrderInfoDTO> convertOrderInfoPageToOrderInfoDTOPage(Page<OrderInfo> orderInfoPage);
 
     OrderInfo convertOrderInfoParam(OrderInfoParam orderInfoParam);
 

@@ -3,6 +3,7 @@ package com.cskaoyan.mall.order.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cskaoyan.mall.order.dto.OrderInfoDTO;
+import com.cskaoyan.mall.order.dto.OrderTradeDTO;
 import com.cskaoyan.mall.order.model.OrderInfo;
 import com.cskaoyan.mall.order.query.OrderInfoParam;
 import com.cskaoyan.mall.ware.api.dto.WareOrderTaskDTO;
@@ -12,6 +13,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderService {
+
+    /**
+     * 提交订单: 获取交易确认信息
+     */
+    OrderTradeDTO trade(String userId);
 
 
     /**
@@ -33,12 +39,13 @@ public interface OrderService {
      * 提交订单: 根据订单id获取订单信息
      */
     OrderInfoDTO getOrderInfo(Long orderId);
+    void updateOrderInfo(OrderInfo orderInfo);
 
 
     /**
      * 我的订单：获取《我的订单》 列表
      */
-    IPage<OrderInfoDTO> getPage(Page<OrderInfoDTO> pageParam, String userId);
+    Page<OrderInfoDTO> getPage(Page<OrderInfo> pageParam, String userId);
 
     /**
      * 支付回调，支付成功，修改订单状态
