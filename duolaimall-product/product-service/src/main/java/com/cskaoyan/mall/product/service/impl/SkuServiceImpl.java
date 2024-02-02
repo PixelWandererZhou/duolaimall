@@ -118,7 +118,7 @@ public class SkuServiceImpl implements SkuService {
 
     @Override
     public BigDecimal getSkuPrice(Long skuId) {
-        return null;
+        return getSkuInfo(skuId).getPrice();
     }
 
     @Override

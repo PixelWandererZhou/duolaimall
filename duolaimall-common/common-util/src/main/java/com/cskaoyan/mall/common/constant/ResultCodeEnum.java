@@ -8,7 +8,6 @@ import lombok.Getter;
  */
 @Getter
 public enum ResultCodeEnum implements CodeEnum {
-
     SUCCESS(200,"成功"),
     FAIL(201, "失败"),
     SERVICE_ERROR(500, "服务异常"),
@@ -25,6 +24,7 @@ public enum ResultCodeEnum implements CodeEnum {
     SECKILL_SUCCESS(215, "抢单成功"),
     SECKILL_FAIL(216, "抢单失败"),
     SECKILL_ILLEGAL(217, "请求不合法"),
+    ORDER_PRICE_CHANGED(219, "订单价格发生变化，请重新提交订单"),
     SECKILL_ORDER_SUCCESS(218, "下单成功");
 
     private Integer code;

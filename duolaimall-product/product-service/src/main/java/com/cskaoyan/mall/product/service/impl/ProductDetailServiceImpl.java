@@ -1,6 +1,6 @@
 package com.cskaoyan.mall.product.service.impl;
 
-import com.alibaba.nacos.common.utils.JacksonUtils;
+import com.alibaba.fastjson.JSON;
 import com.cskaoyan.mall.product.client.SearchApiClient;
 import com.cskaoyan.mall.product.dto.*;
 import com.cskaoyan.mall.product.mapper.CategoryHierarchyMapper;
@@ -11,7 +11,6 @@ import com.cskaoyan.mall.product.service.ProductDetailService;
 import com.cskaoyan.mall.product.service.SkuService;
 import com.cskaoyan.mall.product.service.SpuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -68,7 +67,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         List<SpuPosterDTO> spuPosterList = spuService.findSpuPosterBySpuId(skuInfo.getSpuId());
         //获取spu中包含的所有的不同销售属性取值的组合
         Map<String, Long> skuValueIdsMap = spuService.getSkuValueIdsMap(skuInfo.getSpuId());
-        String valuesSkuJson = JacksonUtils.toJson(skuValueIdsMap);
+        String valuesSkuJson = JSON.toJSONString(skuValueIdsMap);
         productDetailDTO = new ProductDetailDTO();
         productDetailDTO.setSkuAttrList(skuAttrList);
         productDetailDTO.setSkuInfo(skuInfo);

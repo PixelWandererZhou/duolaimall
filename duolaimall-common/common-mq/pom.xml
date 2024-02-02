@@ -16,10 +16,13 @@
 
     <dependencies>
 
+        <!--add dependency in pom.xml-->
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-client</artifactId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <version>2.0.2</version>
         </dependency>
+
     </dependencies>
 
 
